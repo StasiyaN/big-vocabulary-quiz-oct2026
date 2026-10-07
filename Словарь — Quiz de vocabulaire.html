@@ -1,0 +1,864 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Словарь — Quiz de vocabulaire</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout : une feuille de cahier russe (тетрадь в клетку) avec la marge rouge, posée sur un fond quadrillé */
+:root{
+  --paper:#F3F5FA; --grid:rgba(47,79,179,.07); --card:#FFFFFF; --ink:#1E2740; --muted:#5A6482;
+  --line:#DCE1EC; --accent:#2F4FB3; --accent-soft:#E7ECFA; --margin:#D2453A;
+  --ok:#23804F; --ok-bg:#E3F4EA; --bad:#C0392B; --bad-bg:#FBE7E4;
+  --f-display:"Playfair Display", Georgia, "Times New Roman", serif;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#11151F; --grid:rgba(142,167,255,.06); --card:#192030; --ink:#E6EAF3; --muted:#9BA5BE;
+  --line:#2B3448; --accent:#8EA7FF; --accent-soft:#232D47; --margin:#FF7A6E;
+  --ok:#5CCB8E; --ok-bg:#163126; --bad:#FF8A7E; --bad-bg:#3A1E1D; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --paper:#11151F; --grid:rgba(142,167,255,.06); --card:#192030; --ink:#E6EAF3; --muted:#9BA5BE;
+  --line:#2B3448; --accent:#8EA7FF; --accent-soft:#232D47; --margin:#FF7A6E;
+  --ok:#5CCB8E; --ok-bg:#163126; --bad:#FF8A7E; --bad-bg:#3A1E1D; color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:28px 48px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;margin-bottom:18px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.1;margin:0;text-wrap:balance}
+h1 small{display:block;font-family:var(--f-body);font-size:.95rem;font-weight:600;color:var(--muted);margin-top:6px}
+.total{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.sheet{position:relative;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px 20px 24px 20px;box-shadow:0 1px 0 var(--line)}
+@media (min-width:640px){ .sheet{padding-left:64px} .sheet::before{content:"";position:absolute;top:0;bottom:0;left:44px;width:2px;background:var(--margin);opacity:.55} }
+h2{font-family:var(--f-display);font-size:1.25rem;margin:0 0 10px}
+.label{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.block{display:grid;gap:10px;margin-bottom:22px}
+.groups{display:grid;gap:14px}
+.group h3{margin:0 0 6px;font-size:.95rem;font-weight:800;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.group h3 span{font-weight:600;color:var(--muted);font-size:.85rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{appearance:none;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:.88rem;font-weight:600;
+  padding:5px 11px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip .n{color:var(--muted);font-size:.78rem;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.chip[aria-pressed="true"] .n{color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{appearance:none;font:inherit;font-size:.9rem;font-weight:700;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:8px 13px;border-radius:8px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--card)}
+.seg button small{display:block;font-weight:600;font-size:.75rem;opacity:.8}
+.link{appearance:none;background:none;border:0;color:var(--accent);font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;padding:2px 4px;text-decoration:underline;text-underline-offset:3px}
+.btn{appearance:none;font:inherit;font-weight:800;font-size:1rem;border:0;border-radius:10px;padding:12px 22px;cursor:pointer;background:var(--accent);color:var(--card)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hint{font-size:.85rem;color:var(--muted)}
+
+/* Quiz */
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:22px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.stats{display:flex;gap:14px;font-size:.9rem;font-weight:700}
+.stats .g{color:var(--ok)} .stats .b{color:var(--bad)}
+.qtheme{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--margin)}
+.qtask{color:var(--muted);font-size:.92rem;margin:2px 0 6px}
+.prompt{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.word{font-family:var(--f-display);font-size:clamp(1.6rem,5.5vw,2.3rem);font-weight:700;line-height:1.2;overflow-wrap:anywhere;text-wrap:balance}
+.word.fr{font-family:var(--f-body);font-weight:800;font-size:clamp(1.35rem,4.5vw,1.85rem)}
+.tr{color:var(--muted);font-size:.95rem;min-height:1.4em}
+.say{appearance:none;border:1.5px solid var(--line);background:var(--card);color:var(--accent);width:38px;height:38px;border-radius:50%;cursor:pointer;display:inline-grid;place-items:center;flex:none}
+.say svg{width:18px;height:18px}
+.opts{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+@media (min-width:600px){.opts{grid-template-columns:1fr 1fr}}
+.opt{appearance:none;text-align:left;font:inherit;font-size:1.05rem;font-weight:700;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;min-width:0}
+.opt .k{flex:none;width:24px;height:24px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-size:.8rem;display:grid;place-items:center;margin-top:1px}
+.opt span:last-child{min-width:0;overflow-wrap:anywhere}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.typebox{margin-top:18px;display:grid;gap:10px}
+.typebox input{font:inherit;font-size:1.3rem;font-weight:700;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+.typebox input.ok{border-color:var(--ok);background:var(--ok-bg)} .typebox input.bad{border-color:var(--bad);background:var(--bad-bg)}
+.kb{display:grid;gap:5px;user-select:none}
+.kb .r{display:flex;gap:4px;justify-content:center}
+.kb button{appearance:none;font:inherit;font-weight:700;font-size:1rem;flex:1 1 0;min-width:0;max-width:44px;height:40px;border-radius:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;padding:0}
+.kb button.w{max-width:120px;flex:3 1 0;font-size:.85rem}
+.flash{margin-top:18px;border:1.5px dashed var(--line);border-radius:10px;padding:16px;min-height:84px;display:grid;place-items:center;text-align:center}
+.flash .back{font-size:1.3rem;font-weight:800}
+.fb{margin-top:16px;border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.fb.ok{background:var(--ok-bg);color:var(--ok)} .fb.bad{background:var(--bad-bg);color:var(--bad)}
+.fb b{font-size:1rem} .fb .ans{color:var(--ink);font-weight:700} .fb .ans em{font-style:normal;color:var(--muted);font-weight:600}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.kbd{font-size:.78rem;color:var(--muted)}
+
+/* Résultats */
+.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:6px 0 4px}
+.score .big{font-family:var(--f-display);font-size:3.2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.verdict{font-weight:700;color:var(--muted)}
+.err{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:0;border-top:1px solid var(--line)}
+.err li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 14px;padding:9px 0;border-bottom:1px solid var(--line)}
+.err .ru{font-weight:800} .err .frr{color:var(--muted)}
+.err .you{grid-column:1/-1;font-size:.82rem;color:var(--bad)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Словарь<small>Quiz de vocabulaire — tous les cours de russe</small></h1>
+    <div class="total" id="total"></div>
+  </header>
+
+  <!-- Écran de configuration -->
+  <section class="sheet" id="setup">
+    <div class="block">
+      <div class="row" style="justify-content:space-between">
+        <p class="label">1 · Thèmes</p>
+        <div class="row"><button class="link" id="all">Tout cocher</button><button class="link" id="none">Tout décocher</button></div>
+      </div>
+      <div class="groups" id="groups"></div>
+    </div>
+    <div class="block">
+      <p class="label">2 · Mode</p>
+      <div class="seg" id="modes"></div>
+    </div>
+    <div class="block">
+      <p class="label">3 · Nombre de questions</p>
+      <div class="seg" id="counts"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="start">Commencer</button>
+      <span class="hint" id="pool"></span>
+    </div>
+  </section>
+
+  <!-- Écran de quiz -->
+  <section class="sheet" id="quiz" hidden>
+    <div class="top">
+      <span id="pos" style="font-weight:800"></span>
+      <div class="stats"><span class="g" id="sg"></span><span class="b" id="sb"></span></div>
+      <button class="link" id="quit">Arrêter</button>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="qtheme" id="qtheme"></div>
+    <div class="qtask" id="qtask"></div>
+    <div class="prompt"><div class="word" id="qword"></div><button class="say" id="say" title="Écouter" aria-label="Écouter la prononciation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg></button></div>
+    <div class="tr" id="qtr"></div>
+    <div id="area"></div>
+    <div id="fb"></div>
+    <div class="actions" id="next-row" hidden><button class="btn" id="next">Suivant</button><span class="kbd">Entrée ↵</span></div>
+  </section>
+
+  <!-- Résultats -->
+  <section class="sheet" id="res" hidden>
+    <p class="label">Résultat</p>
+    <div class="score"><span class="big" id="rscore"></span><span class="verdict" id="rverdict"></span></div>
+    <div class="actions">
+      <button class="btn" id="redo-err">Revoir mes erreurs</button>
+      <button class="btn ghost" id="again">Nouveau quiz</button>
+    </div>
+    <div id="rlist"></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+// ---------- Données : extraites des fichiers Word du dossier SAM RUSSE ----------
+// Format de chaque ligne : russe | français | transcription (facultative)
+var GROUPS = [
+ {g:"Ферма · La ferme", cats:[
+  {id:"f1", name:"Животные", fr:"Animaux", src:"ferma_slovar", d:`
+корова|vache|karóva
+бык|taureau|byk
+телёнок|veau|telyónok
+лошадь|cheval|lóshad'
+жеребёнок|poulain|zherebyónok
+свинья|cochon / truie|svin'yá
+поросёнок|porcelet|parasyónok
+овца|brebis|avtsá
+баран|bélier / mouton|barán
+ягнёнок|agneau|yagnyónok
+коза|chèvre|kazá
+козёл|bouc|kazyól
+курица|poule|kúritsa
+петух|coq|petúkh
+цыплёнок|poussin|tsyplyónok
+утка|canard|útka
+гусь|oie|gus'
+индюк|dindon|indyúk
+кролик|lapin|królik
+собака|chien|sabáka
+кот / кошка|chat / chatte|kot / kóshka`},
+  {id:"f2", name:"Постройки и места", fr:"Bâtiments et lieux", d:`
+ферма|ferme (exploitation)|férma
+сарай|grange / hangar|saráy
+хлев|étable|khlyev
+конюшня|écurie|kanyúshnya
+курятник|poulailler|kuryátnik
+амбар|grange à grains|ambár
+загон|enclos|zagón
+поле|champ|pólye
+огород|potager|agaród
+сад|verger / jardin|sad
+теплица|serre|tyeplítsa
+колодец|puits|kalódyets`},
+  {id:"f3", name:"Люди и инструменты", fr:"Personnes et outils", d:`
+фермер|fermier / agriculteur|férmer
+крестьянин|paysan|kryest'yánin
+пастух|berger|pastúkh
+доярка|trayeuse (laitière)|dayárka
+трактор|tracteur|tráktar
+плуг|charrue|pluk
+грабли|râteau|grábli
+лопата|pelle / bêche|lapáta
+вилы|fourche|víly
+ведро|seau|vyedró
+сено|foin|syéna
+солома|paille|salóma
+корм|nourriture (bétail)|korm
+телега|charrette|telyéga`},
+  {id:"f4", name:"Растения и глаголы", fr:"Plantes, récolte, verbes", d:`
+пшеница|blé|pshenítsa
+рожь|seigle|rosh
+овёс|avoine|avyós
+картофель|pomme de terre|kartófel'
+морковь|carotte|markóf'
+капуста|chou|kapústa
+урожай|récolte|urazháy
+семена|graines|syemená
+сажать / посадить|planter|sazhát' / pasadít'
+сеять / посеять|semer|syéyat' / pasyéyat'
+собирать урожай|récolter|sabirát' urazháy
+кормить|nourrir|karmít'
+доить|traire|daít'
+пасти|faire paître / garder le troupeau|pastí
+ухаживать за животными|s'occuper des animaux|ukházhivat' za zhivótnymi
+поливать|arroser|palivát'
+косить|faucher|kasít'
+пахать|labourer|pakhát'`}
+ ]},
+ {g:"Современная ферма · La ferme moderne", cats:[
+  {id:"m1", name:"Типы ферм и технологии", fr:"Exploitations et technologies", d:`
+агрохолдинг|groupe agroalimentaire / holding agricole|
+фермерское хозяйство|exploitation agricole familiale|
+органическая ферма|ferme biologique|
+молочная ферма|ferme laitière|
+животноводческий комплекс|complexe d'élevage|
+тепличный комбинат|complexe de serres|
+вертикальная ферма|ferme verticale|
+агротуризм|agritourisme|
+умное сельское хозяйство|agriculture intelligente / smart farming|
+дрон|drone|
+датчик|capteur|
+автопилот трактора|pilote automatique du tracteur|
+точное земледелие|agriculture de précision|
+система орошения|système d'irrigation|
+система капельного полива|irrigation goutte-à-goutte|
+робот-дояр|robot de traite|
+мониторинг стада|suivi du troupeau|
+приложение для фермера|application pour agriculteur|
+база данных урожая|base de données des récoltes|`},
+  {id:"m2", name:"Экология и риски", fr:"Écologie et risques", d:`
+устойчивое сельское хозяйство|agriculture durable|ustóychivaye syél'skaye khazyáystva
+органическое земледелие|agriculture biologique|arganícheskaye zemledyéliye
+экосертификация|certification écologique|ekasertifikátsiya
+севооборот|rotation des cultures|syevaabarót
+биоудобрение|engrais biologique|bioudabryéniye
+возобновляемая энергия|énergie renouvelable|vazabnavlyáyemaya enyérgiya
+солнечные панели|panneaux solaires|sólnechnyye panyéli
+углеродный след|empreinte carbone|uglyeródnyy slyet
+переработка отходов|recyclage des déchets|peryerabótka atkhódaf
+биоразнообразие|biodiversité|biaraznaabráziye
+изменение климата|changement climatique|
+засуха|sécheresse|
+эрозия почвы|érosion des sols|
+качество почвы|qualité du sol|
+защита урожая|protection des cultures|
+устойчивость к вредителям|résistance aux nuisibles|
+генетически модифицированный|génétiquement modifié (OGM)|`},
+  {id:"m3", name:"Бизнес, профессии, глаголы", fr:"Business, métiers, verbes", d:`
+ферма-производитель|ferme productrice|férma-praizvadítel'
+прямые продажи|vente directe|pryamýye pradázhi
+от фермы к столу|de la ferme à la table|at férmy k stalú
+фермерский рынок|marché fermier|férmerskiy rýnak
+онлайн-заказ продукции|commande en ligne de produits|anláyn-zakás pradúktsii
+логистика поставок|logistique d'approvisionnement|lagístika pastávak
+сертификат качества|certificat de qualité|sertifikát káchestva
+субсидия|subvention|subsídiya
+кооператив|coopérative|kaaperatíf
+экспорт продукции|exportation de produits|éksport pradúktsii
+агроном|agronome|
+ветеринар|vétérinaire|
+менеджер фермы|gestionnaire de ferme|
+оператор дрона|opérateur de drone|
+инженер по автоматизации|ingénieur en automatisation|
+специалист по устойчивому развитию|spécialiste en développement durable|
+автоматизировать процесс|automatiser un processus|
+анализировать данные|analyser des données|
+мониторить состояние почвы|surveiller l'état du sol|
+экономить ресурсы|économiser les ressources|
+внедрять технологии|mettre en œuvre des technologies|
+сокращать выбросы|réduire les émissions|
+сертифицировать продукцию|certifier des produits|
+продавать напрямую|vendre directement|`}
+ ]},
+ {g:"Переезд · Le déménagement", cats:[
+  {id:"p1", name:"Жильё и комнаты", fr:"Logement et pièces", d:`
+квартира|appartement|kvar-TI-ra
+студия|studio|STU-di-ya
+однокомнатная квартира|appartement 1 pièce (F1)|ad-na-KOM-nat-na-ya kvar-TI-ra
+двушка|appartement 2 pièces (fam.)|DVUSH-ka
+трёшка|appartement 3 pièces (fam.)|TRYOSH-ka
+дом|maison / immeuble|dom
+коттедж|maison individuelle|kat-TEDZH
+общежитие|résidence universitaire / foyer|ab-shche-ZHI-ti-ye
+коммуналка|appartement communautaire|ka-mu-NAL-ka
+новостройка|logement neuf|na-va-STROY-ka
+этаж|étage|e-TASH
+подвал|cave / sous-sol|pad-VAL
+крыша|toit / toiture|KRY-sha
+комната|pièce / chambre|KOM-na-ta
+гостиная|salon|gas-TI-na-ya
+спальня|chambre à coucher|SPAL'-nya
+кухня|cuisine|KUKH-nya
+ванная|salle de bain|VAN-na-ya
+туалет|toilettes|tu-a-LET
+прихожая|entrée (vestibule)|pri-KHO-zha-ya
+коридор|couloir|ka-ri-DOR
+балкон|balcon|bal-KON
+лоджия|loggia|LODZH-i-ya
+подъезд|cage d'escalier / hall d'immeuble|pad-YEST
+лестница|escalier|LYES-ni-tsa
+лифт|ascenseur|lift`},
+  {id:"p2", name:"Мебель и техника", fr:"Meubles et équipements", d:`
+мебель|meubles (collectif)|MYE-bel'
+диван|canapé|di-VAN
+кресло|fauteuil|KRYES-la
+кровать|lit|kra-VAT'
+шкаф|armoire / placard|shkaf
+полка|étagère|POL-ka
+стол|table|stol
+стул|chaise|stul
+лампа|lampe|LAM-pa
+холодильник|réfrigérateur|kha-la-DIL'-nik
+стиральная машина|machine à laver|sti-RAL'-na-ya ma-SHY-na
+плита|cuisinière / plaque|pli-TA
+душ|douche|dush
+отопление|chauffage|a-ta-PLYE-ni-ye
+кондиционер|climatiseur|kan-di-tsy-a-NYER`},
+  {id:"p3", name:"Аренда и переезд", fr:"Location et déménagement", d:`
+аренда|location / loyer|a-RYEN-da
+снимать / снять|louer (en tant que locataire)|sni-MAT' / snyat'
+сдавать / сдать|louer (en tant que propriétaire)|zda-VAT' / zdat'
+договор|contrat|da-ga-VOR
+залог|caution / dépôt de garantie|za-LOK
+оплата|paiement|ap-LA-ta
+коммунальные услуги|charges (eau, gaz, électricité)|ka-mu-NAL'-ny-ye US-lu-gi
+риелтор|agent immobilier|ri-EL-tar
+хозяин / хозяйка|propriétaire (m. / f.)|kha-ZYA-in / kha-ZYAY-ka
+жилец|locataire|zhy-LYETS
+прописка|inscription administrative (domicile)|pra-PIS-ka
+объявление|annonce|ab-yav-LYE-ni-ye
+осмотр квартиры|visite de l'appartement|as-MOTR kvar-TI-ry
+переезд|déménagement|pe-re-YEST
+переезжать / переехать|déménager|pe-re-ye-ZHAT' / pe-re-YE-khat'
+упаковывать|emballer|u-pa-KO-vy-vat'
+распаковывать|déballer|ras-pa-KO-vy-vat'
+коробка|carton / boîte|ka-ROP-ka
+грузовик|camion (de déménagement)|gru-za-VIK
+вещи|affaires / objets|VYE-shchi
+перевозить / перевезти|transporter|pe-re-va-ZIT' / pe-re-vyes-TI
+выбрасывать|jeter / se débarrasser de|vy-BRA-sy-vat'
+отдавать|donner (des affaires)|at-da-VAT'
+подключить|brancher / connecter (eau, gaz…)|pat-klyu-CHIT'
+ремонт|travaux / rénovation|re-MONT`},
+  {id:"p4", name:"Район", fr:"Le quartier", d:`
+район|quartier|ra-YON
+улица|rue|U-li-tsa
+проспект|avenue / boulevard|pras-PYEKT
+площадь|place (publique)|PLO-shchad'
+двор|cour (d'immeuble)|dvor
+сосед / соседка|voisin / voisine|sa-SYET / sa-SYET-ka
+окружение|environnement / entourage|ak-ru-ZHE-ni-ye
+общественный транспорт|transports en commun|ap-SHCHEST-ven-ny TRANS-part
+остановка|arrêt (bus, tram)|as-ta-NOF-ka
+станция метро|station de métro|STAN-tsy-ya met-RO
+магазин|magasin|ma-ga-ZIN
+аптека|pharmacie|ap-TYE-ka
+школа|école|SHKO-la
+спокойный|calme / tranquille|spa-KOY-ny
+шумный|bruyant|SHUM-ny
+зелёный|vert (végétalisé)|zi-LYO-ny
+центральный|central|tsen-TRAL'-ny
+далеко от центра|loin du centre|da-le-KO at TSEN-tra`},
+  {id:"p5", name:"Фразы: переезд", fr:"Phrases clés", phrase:true, d:`
+Я ищу квартиру в аренду.|Je cherche un appartement à louer.|
+Сколько стоит аренда в месяц?|Combien coûte le loyer par mois ?|
+Входит ли коммуналка в стоимость?|Les charges sont-elles incluses ?|
+Можно посмотреть квартиру?|Est-il possible de visiter l'appartement ?|
+Есть ли парковка рядом?|Y a-t-il un parking à proximité ?|
+Когда можно заселиться?|À partir de quand peut-on emménager ?|
+Поможешь мне переехать?|Tu m'aideras à déménager ?|
+Осторожно! Это очень тяжёлое.|Fais attention ! C'est très lourd.|
+Куда поставить этот диван?|Où mettre ce canapé ?|
+Я ещё не распаковал все коробки.|Je n'ai pas encore déballé tous les cartons.|
+Нам надо подключить интернет.|Il faut qu'on fasse brancher internet.|
+Мне очень нравится моя новая квартира.|J'aime beaucoup mon nouvel appartement.|
+Район спокойный, но далеко от центра.|Le quartier est calme, mais loin du centre.|
+Соседи очень приятные.|Les voisins sont très sympathiques.|
+Жаль, что нет балкона.|Dommage qu'il n'y ait pas de balcon.|
+Из окна отличный вид.|La vue depuis la fenêtre est magnifique.|
+Я уже привык к новому месту.|Je suis déjà habitué au nouvel endroit.|
+Скучаю по старому району.|L'ancien quartier me manque.|`}
+ ]},
+ {g:"Фильмы · Le cinéma", cats:[
+  {id:"c1", name:"Жанры и кино", fr:"Genres et vocabulaire du film", d:`
+фильм|film|fil'm
+комедия|comédie|ka-MYE-di-ya
+триллер|thriller|TRIL-ler
+драма|drame|DRA-ma
+боевик|film d'action|ba-ye-VIK
+ужасы|film d'horreur|U-zha-sy
+мультфильм|dessin animé|mul't-FIL'M
+документальный фильм|documentaire|da-ku-men-TAL'-ny fil'm
+научная фантастика|science-fiction|na-UCH-na-ya fan-TAS-ti-ka
+романтическая комедия|comédie romantique|ra-man-TI-ches-ka-ya ka-MYE-di-ya
+режиссёр|réalisateur|re-zhy-SYOR
+актёр / актриса|acteur / actrice|ak-TYOR / ak-TRI-sa
+сюжет|scénario / intrigue|syu-ZHET
+главный герой|personnage principal|GLAV-ny ge-ROY
+экран|écran|ek-RAN
+субтитры|sous-titres|sup-TIT-ry
+озвучка|doublage|az-VUCH-ka
+сериал|série|se-ri-AL
+сезон|saison|se-ZON
+серия|épisode|SE-ri-ya
+сеанс|séance|se-ANS`},
+  {id:"c2", name:"Мнение и прилагательные", fr:"Donner son avis", d:`
+интересный|intéressant|in-te-RES-ny
+скучный|ennuyeux|SKUCH-ny
+смешной|drôle|smesh-NOY
+страшный|effrayant|STRASH-ny
+грустный|triste|GRUS-ny
+захватывающий|captivant|za-KHVA-ty-va-yu-shchy
+разочаровывающий|décevant|ra-za-cha-RO-vy-va-yu-shchy
+шедевр|chef-d'œuvre|she-DEVR
+увлекательный|passionnant / fascinant|uv-le-KA-tel'-ny
+длинный|long|DLIN-ny
+оригинальный|original|a-ri-gi-NAL'-ny
+неожиданный|inattendu|ne-a-ZHY-dan-ny
+по-моему|à mon avis|pa-MO-ye-mu
+мне кажется|il me semble|mne KA-zhet-sa
+я считаю, что|je pense que|ya shchi-TA-yu shto
+мне нравится|ça me plaît / j'aime|mne NRA-vit-sa
+мне понравился|j'ai aimé (masc.)|mne pan-RA-vil-sa
+я бы посоветовал|je recommanderais|ya by pa-sa-VYE-ta-val`}
+ ]},
+ {g:"Моя неделя · Ma semaine", cats:[
+  {id:"w1", name:"Дни, глаголы, связки", fr:"Jours, verbes, connecteurs", d:`
+понедельник|lundi|pa-ni-DYEL'-nik
+вторник|mardi|FTOR-nik
+среда|mercredi|sre-DA
+четверг|jeudi|chet-VYERK
+пятница|vendredi|PYAT-ni-tsa
+суббота|samedi|su-BO-ta
+воскресенье|dimanche|vas-kre-SYEN'-ye
+неделя|semaine|ne-DYE-lya
+выходной|jour de repos|vy-khad-NOY
+рабочий день|jour de travail|ra-BO-chiy dyen'
+по понедельникам|le lundi (chaque semaine)|pa pa-ni-DYEL'-ni-kam
+на этой неделе|cette semaine|na E-tay ne-DYE-le
+на прошлой неделе|la semaine dernière|na PROSH-lay ne-DYE-le
+на следующей неделе|la semaine prochaine|na SLE-du-yu-shchey ne-DYE-le
+работать|travailler|ra-BO-tat'
+отдыхать|se reposer|at-dy-KHAT'
+просыпаться|se réveiller|pra-sy-PAT'-sya
+ложиться спать|se coucher|la-ZHYT'-sya spat'
+встречаться|se retrouver / sortir|fstre-CHAT'-sya
+проводить время|passer du temps|pra-va-DIT' VRYE-mya
+уставать|se fatiguer|us-ta-VAT'
+потому что|parce que|pa-ta-MU shta
+обычно|d'habitude|a-BYCH-na
+иногда|parfois|i-nag-DA`}
+ ]},
+ {g:"Пространство · L'espace", cats:[
+  {id:"d1", name:"Лево, право и наречия", fr:"Gauche, droite, directions", d:`
+налево|à gauche (direction : куда ?)|na-LYE-va
+направо|à droite (direction : куда ?)|na-PRA-va
+слева|à gauche (position : где ?)|SLYE-va
+справа|à droite (position : где ?)|SPRA-va
+левый|gauche (adjectif)|LYE-vy
+правый|droit (adjectif)|PRA-vy
+левша|gaucher|lev-SHA
+прямо|tout droit|PRYA-ma
+вперёд|en avant (direction)|fpe-RYOT
+впереди|devant (position)|fpe-re-DI
+назад|en arrière (direction)|na-ZAT
+сзади|derrière (position)|ZZA-di
+вверх|vers le haut|vverkh
+наверху|en haut (position)|na-ver-KHU
+вниз|vers le bas|vnis
+внизу|en bas (position)|vni-ZU
+внутрь|vers l'intérieur|vnutr'
+внутри|à l'intérieur (position)|vnut-RI
+наружу|vers l'extérieur|na-RU-zhu
+снаружи|dehors (position)|sna-RU-zhy
+светофор|feu (de circulation)|sve-ta-FOR
+перекрёсток|carrefour|pe-re-KRYO-stak
+поворот|virage / tournant|pa-va-ROT
+угол|coin / angle|U-gal
+переулок|ruelle|pe-re-U-lak
+полоса|voie (de circulation)|pa-la-SA`},
+  {id:"d2", name:"Предлоги места", fr:"Prépositions de lieu", d:`
+над|au-dessus de|nat
+под|sous|pat
+перед|devant|PYE-ret
+за|derrière|za
+около / возле|près de / à côté de|O-ka-la / VOZ-le
+вокруг|autour de|va-KRUK
+между|entre|MYEZH-du
+через|à travers / en traversant|CHE-res
+сквозь|à travers (de part en part)|skvos'
+вдоль|le long de|vdol'
+напротив|en face de|na-PRO-tif
+посередине|au milieu|pa-se-re-DI-ne`}
+ ]},
+ {g:"Глаголы · Verbes", cats:[
+  {id:"v1", name:"Идти и его семья", fr:"Aller et ses préfixes", d:`
+идти|aller (en ce moment, une direction)|it-TI
+ходить|aller (habitude, aller-retour)|kha-DIT'
+выходить / выйти|sortir|vy-kha-DIT' / VY-ti
+входить / войти|entrer|fkha-DIT' / vay-TI
+приходить / прийти|arriver, venir|pri-kha-DIT' / pri-TI
+уходить / уйти|partir, s'en aller|u-kha-DIT' / uy-TI
+подходить / подойти|s'approcher|pat-kha-DIT' / pa-day-TI
+отходить / отойти|s'éloigner|at-kha-DIT' / a-tay-TI
+заходить / зайти|passer (chez qqn)|za-kha-DIT' / zay-TI
+переходить / перейти|traverser|pe-re-kha-DIT' / pe-rey-TI
+проходить / пройти|passer devant, parcourir|pra-kha-DIT' / pray-TI
+доходить / дойти|arriver jusqu'à|da-kha-DIT' / day-TI
+обходить / обойти|faire le tour de, contourner|ap-kha-DIT' / a-bay-TI
+расходиться / разойтись|se séparer, se disperser|ras-kha-DIT'-sya / ra-zay-TIS'
+сходить / сойти|descendre (d'un véhicule)|skha-DIT' / say-TI
+находить / найти|trouver|na-kha-DIT' / nay-TI
+всходить / взойти|monter, se lever (soleil)|fskha-DIT' / vzay-TI
+находиться|se trouver, se situer|na-kha-DIT'-sya
+поворачивать / повернуть|tourner|pa-va-RA-chi-vat' / pa-ver-NUT'
+понимать / понять|comprendre|pa-ni-MAT' / pa-NYAT'`}
+ ]},
+ {g:"Выражения · Expressions", cats:[
+  {id:"e1", name:"Выражения и идиомы", fr:"Expressions idiomatiques", phrase:true, d:`
+Идёт дождь.|Il pleut.|
+Тебе идёт это платье.|Cette robe te va bien.|
+Фильм идёт два часа.|Le film dure deux heures.|
+Время идёт быстро.|Le temps passe vite.|
+Всё идёт по плану.|Tout se passe selon le plan.|
+Речь идёт о деньгах.|Il s'agit d'argent.|
+найти общий язык|trouver un terrain d'entente|
+выйти из себя|sortir de ses gonds, s'énerver|
+зайти в тупик|aboutir à une impasse|
+До меня дошло!|J'ai (enfin) compris !|
+выйти замуж|se marier (pour une femme)|
+Это подходит мне.|Ça me convient.|
+Урок прошёл хорошо.|Le cours s'est bien passé.|
+встать не с левой ноги|se lever du pied gauche|
+правая рука (чья-то)|le bras droit (de qqn)|
+левый товар|marchandise au noir (fam.)|
+шаг вперёд, два назад|un pas en avant, deux pas en arrière|
+задним умом крепок|comprendre après coup, trop tard|
+дело за тобой|c'est à toi de jouer|
+под рукой|sous la main|
+читать между строк|lire entre les lignes|
+стоять горой за кого-то|défendre qqn bec et ongles|
+новоселье|pendaison de crémaillère|
+отмечать новоселье|fêter la pendaison de crémaillère|
+въехать|emménager (dans un logement)|
+выехать|quitter un logement|
+съехаться|emménager ensemble|
+обжиться|s'installer, prendre ses marques|`}
+ ]}
+];
+
+// ---------- Préparation ----------
+var ITEMS = [], CATS = {}, seen = {};
+GROUPS.forEach(function(G){ G.cats.forEach(function(c){
+  c.items = [];
+  c.d.trim().split("\n").forEach(function(line){
+    var p = line.split("|"); if (p.length < 2) return;
+    var ru = p[0].trim(), fr = p[1].trim(), tr = (p[2] || "").trim();
+    var key = ru.toLowerCase(); if (seen[key]) return; seen[key] = 1;
+    var it = {ru:ru, fr:fr, tr:tr, cat:c.id, phrase:!!c.phrase};
+    it.typable = !c.phrase && ru.split(/\s+/).filter(function(w){return w !== "/";}).length <= 4;
+    c.items.push(it); ITEMS.push(it);
+  });
+  CATS[c.id] = c;
+});});
+
+var MODES = [
+  {id:"mix", t:"Mélange", s:"tous les types"},
+  {id:"ru-fr", t:"Russe → français", s:"QCM"},
+  {id:"fr-ru", t:"Français → russe", s:"QCM"},
+  {id:"type", t:"Écrire en russe", s:"avec clavier cyrillique"},
+  {id:"flash", t:"Cartes", s:"je savais / à revoir"}
+];
+var COUNTS = [10, 20, 40, 0];
+var state = {cats: {}, mode:"mix", count:20};
+Object.keys(CATS).forEach(function(k){ state.cats[k] = true; });
+try { var sv = JSON.parse(localStorage.getItem("slovar-settings") || "null");
+  if (sv) { if (sv.cats) state.cats = Object.assign(state.cats, sv.cats); if (sv.mode) state.mode = sv.mode; if (sv.count !== undefined) state.count = sv.count; } } catch(e) {}
+function saveSettings(){ try { localStorage.setItem("slovar-settings", JSON.stringify(state)); } catch(e) {} }
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+function shuffle(a){ for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+$("total").textContent = ITEMS.length + " mots et expressions · " + Object.keys(CATS).length + " thèmes";
+
+// ---------- Écran de configuration ----------
+function renderSetup(){
+  $("groups").innerHTML = GROUPS.map(function(G){
+    var n = G.cats.reduce(function(a, c){ return a + c.items.length; }, 0);
+    return "<div class=\"group\"><h3>" + esc(G.g) + " <span>" + n + "</span></h3><div class=\"chips\">" +
+      G.cats.map(function(c){
+        return "<button class=\"chip\" id=\"cat-" + c.id + "\" data-cat=\"" + c.id + "\" aria-pressed=\"" + (!!state.cats[c.id]) + "\" title=\"" + esc(c.fr) + "\">" +
+          esc(c.name) + "<span class=\"n\">" + c.items.length + "</span></button>";
+      }).join("") + "</div></div>";
+  }).join("");
+  $("modes").innerHTML = MODES.map(function(m){
+    return "<button id=\"mode-" + m.id + "\" data-mode=\"" + m.id + "\" aria-pressed=\"" + (state.mode === m.id) + "\">" + m.t + "<small>" + m.s + "</small></button>";
+  }).join("");
+  $("counts").innerHTML = COUNTS.map(function(n){
+    return "<button id=\"count-" + n + "\" data-count=\"" + n + "\" aria-pressed=\"" + (state.count === n) + "\">" + (n || "Tout") + "</button>";
+  }).join("");
+  var pool = buildPool(), n = pool.length;
+  var q = state.count ? Math.min(state.count, n) : n;
+  $("pool").textContent = n ? (n + " mots disponibles · " + q + " questions") : "Choisis au moins un thème.";
+  $("start").disabled = !n;
+}
+function buildPool(){
+  return ITEMS.filter(function(it){
+    if (!state.cats[it.cat]) return false;
+    if (state.mode === "type") return it.typable;
+    return true;
+  });
+}
+$("groups").addEventListener("click", function(e){
+  var b = e.target.closest("[data-cat]"); if (!b) return;
+  state.cats[b.dataset.cat] = !state.cats[b.dataset.cat]; saveSettings(); renderSetup();
+});
+$("modes").addEventListener("click", function(e){
+  var b = e.target.closest("[data-mode]"); if (!b) return; state.mode = b.dataset.mode; saveSettings(); renderSetup();
+});
+$("counts").addEventListener("click", function(e){
+  var b = e.target.closest("[data-count]"); if (!b) return; state.count = +b.dataset.count; saveSettings(); renderSetup();
+});
+$("all").onclick = function(){ Object.keys(CATS).forEach(function(k){ state.cats[k] = true; }); saveSettings(); renderSetup(); };
+$("none").onclick = function(){ Object.keys(CATS).forEach(function(k){ state.cats[k] = false; }); saveSettings(); renderSetup(); };
+
+// ---------- Quiz ----------
+var Q = null; // {list, i, good, bad, errors, answered}
+function show(id){ ["setup", "quiz", "res"].forEach(function(s){ $(s).hidden = s !== id; }); window.scrollTo(0, 0); }
+
+function startQuiz(items){
+  var list = shuffle(items.slice());
+  if (state.count && !items.isRetry) list = list.slice(0, state.count);
+  Q = {list: list.map(function(it){ return {it: it, kind: pickKind(it)}; }), i: 0, good: 0, bad: 0, errors: []};
+  show("quiz"); renderQ();
+}
+function pickKind(it){
+  var m = state.mode;
+  if (m === "type" && !it.typable) m = "fr-ru";
+  if (m !== "mix") return m;
+  var k = ["ru-fr", "fr-ru", "ru-fr", "fr-ru"]; if (it.typable) k.push("type", "type");
+  return k[Math.floor(Math.random() * k.length)];
+}
+function alts(s){ return s.toLowerCase().split("/").map(function(x){ return x.replace(/\(.*?\)/g, "").trim(); }).filter(Boolean); }
+function overlaps(a, b, field){ var A = alts(a[field]), B = alts(b[field]); return A.some(function(x){ return B.indexOf(x) > -1; }); }
+function distractors(it, field){
+  var same = shuffle(CATS[it.cat].items.filter(function(x){ return x !== it; }));
+  var other = shuffle(ITEMS.filter(function(x){ return x.cat !== it.cat && x.phrase === it.phrase; }));
+  var out = [];
+  same.concat(other).some(function(x){
+    if (overlaps(x, it, field) || out.some(function(o){ return o[field] === x[field] || overlaps(o, x, field); })) return false;
+    out.push(x); return out.length === 3;
+  });
+  return out;
+}
+
+var LAST_SAY = "";
+function renderQ(){
+  var q = Q.list[Q.i], it = q.it, c = CATS[it.cat];
+  Q.answered = false;
+  $("pos").textContent = (Q.i + 1) + " / " + Q.list.length;
+  $("sg").textContent = "✓ " + Q.good; $("sb").textContent = "✗ " + Q.bad;
+  $("prog").style.width = (Q.i / Q.list.length * 100) + "%";
+  $("qtheme").textContent = c.name + " · " + c.fr;
+  $("fb").innerHTML = ""; $("next-row").hidden = true;
+  var w = $("qword"), area = $("area");
+  var showRu = q.kind === "ru-fr" || q.kind === "flash";
+  w.textContent = showRu ? it.ru : it.fr;
+  w.className = "word" + (showRu ? "" : " fr");
+  $("qtr").textContent = showRu && it.tr ? "[" + it.tr + "]" : "";
+  $("say").hidden = !showRu || !canSpeak();
+  LAST_SAY = it.ru;
+
+  if (q.kind === "ru-fr" || q.kind === "fr-ru"){
+    var field = q.kind === "ru-fr" ? "fr" : "ru";
+    $("qtask").textContent = q.kind === "ru-fr" ? "Choisis la bonne traduction" : "Choisis le mot russe";
+    var opts = shuffle([it].concat(distractors(it, field)));
+    area.innerHTML = "<div class=\"opts\">" + opts.map(function(o, k){
+      return "<button class=\"opt\" id=\"opt-" + k + "\" data-k=\"" + k + "\"><span class=\"k\">" + (k + 1) + "</span><span>" + esc(o[field]) + "</span></button>";
+    }).join("") + "</div>";
+    area.querySelectorAll(".opt").forEach(function(b, k){
+      b.onclick = function(){ answerChoice(opts[k] === it, b, opts.indexOf(it)); };
+    });
+  } else if (q.kind === "type"){
+    $("qtask").textContent = "Écris le mot en russe";
+    area.innerHTML = "<div class=\"typebox\"><input id=\"ans\" autocomplete=\"off\" autocapitalize=\"off\" spellcheck=\"false\" lang=\"ru\" placeholder=\"по-русски…\">" +
+      "<div class=\"kb\" id=\"kb\"></div><div class=\"actions\" style=\"margin-top:4px\"><button class=\"btn\" id=\"check\">Vérifier</button><button class=\"link\" id=\"skip\">Je ne sais pas</button></div></div>";
+    buildKb();
+    var inp = $("ans");
+    $("check").onclick = function(){ answerType(inp.value); };
+    $("skip").onclick = function(){ answerType(""); };
+    inp.addEventListener("keydown", function(e){ if (e.key === "Enter" && !Q.answered){ e.preventDefault(); e.stopPropagation(); answerType(inp.value); } });
+    if (window.matchMedia("(pointer:fine)").matches) inp.focus();
+  } else {
+    $("qtask").textContent = "Te souviens-tu de la traduction ?";
+    area.innerHTML = "<div class=\"flash\" id=\"card\"><button class=\"btn ghost\" id=\"flip\">Retourner la carte</button></div>";
+    $("flip").onclick = flip;
+  }
+}
+function flip(){
+  var it = Q.list[Q.i].it;
+  $("card").innerHTML = "<div><div class=\"back\">" + esc(it.fr) + "</div></div>";
+  $("area").insertAdjacentHTML("beforeend", "<div class=\"actions\" id=\"selfgrade\"><button class=\"btn\" id=\"knew\" style=\"background:var(--ok)\">Je savais</button><button class=\"btn\" id=\"didnt\" style=\"background:var(--bad)\">À revoir</button><span class=\"kbd\">1 / 2</span></div>");
+  $("knew").onclick = function(){ record(true, ""); nextQ(); };
+  $("didnt").onclick = function(){ record(false, ""); nextQ(); };
+  Q.flipped = true;
+}
+function record(ok, given){
+  Q.answered = true;
+  if (ok) Q.good++; else { Q.bad++; Q.errors.push({it: Q.list[Q.i].it, given: given}); }
+  $("sg").textContent = "✓ " + Q.good; $("sb").textContent = "✗ " + Q.bad;
+}
+function answerChoice(ok, btn, correctIdx){
+  if (Q.answered) return;
+  var bs = $("area").querySelectorAll(".opt");
+  bs.forEach(function(b){ b.disabled = true; });
+  bs[correctIdx].classList.add("ok");
+  if (!ok) btn.classList.add("bad");
+  record(ok, ok ? "" : btn.textContent.replace(/^\d/, ""));
+  feedback(ok, "");
+}
+function norm(s){
+  return s.toLowerCase().replace(/ё/g, "е").replace(/[́̀]/g, "").replace(/\(.*?\)/g, "")
+    .replace(/[.,!?«»"'’:;—–]/g, " ").replace(/-/g, " ").replace(/\s+/g, " ").trim();
+}
+function lev(a, b){
+  var m = a.length, n = b.length, d = [], i, j;
+  for (i = 0; i <= m; i++){ d[i] = [i]; } for (j = 0; j <= n; j++){ d[0][j] = j; }
+  for (i = 1; i <= m; i++) for (j = 1; j <= n; j++)
+    d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return d[m][n];
+}
+function answerType(val){
+  if (Q.answered) return;
+  var it = Q.list[Q.i].it, v = norm(val);
+  var targets = [norm(it.ru)].concat(it.ru.split("/").map(norm));
+  var exact = v && targets.indexOf(v) > -1;
+  var near = !exact && v.length >= 4 && targets.some(function(t){ return t.length >= 5 && lev(v, t) === 1; });
+  var ok = exact || near;
+  var inp = $("ans"); inp.disabled = true; inp.classList.add(ok ? "ok" : "bad");
+  $("check").disabled = true; $("skip").hidden = true; $("kb").hidden = true;
+  record(ok, val);
+  feedback(ok, near ? "Presque ! Attention à l'orthographe." : "");
+}
+function feedback(ok, extra){
+  var it = Q.list[Q.i].it;
+  $("fb").innerHTML = "<div class=\"fb " + (ok ? "ok" : "bad") + "\"><b>" + (ok ? "Правильно ! Bonne réponse." : "Pas tout à fait.") + (extra ? " " + esc(extra) : "") + "</b>" +
+    "<span class=\"ans\">" + esc(it.ru) + (it.tr ? " <em>[" + esc(it.tr) + "]</em>" : "") + " — " + esc(it.fr) + "</span></div>";
+  $("next-row").hidden = false;
+  $("next").focus({preventScroll: true});
+  if (canSpeak() && Q.list[Q.i].kind !== "ru-fr") $("say").hidden = false;
+}
+function nextQ(){
+  Q.i++;
+  if (Q.i >= Q.list.length) return results();
+  renderQ();
+}
+$("next").onclick = nextQ;
+$("quit").onclick = function(){ if (Q && Q.i > 0) { Q.list = Q.list.slice(0, Q.i + (Q.answered ? 1 : 0)); results(); } else { show("setup"); } };
+
+document.addEventListener("keydown", function(e){
+  if ($("quiz").hidden || e.target.id === "ans") return;
+  var q = Q.list[Q.i];
+  if (e.key === "Enter" && Q.answered){ e.preventDefault(); nextQ(); return; }
+  if (!Q.answered && (q.kind === "ru-fr" || q.kind === "fr-ru") && /^[1-4]$/.test(e.key)){
+    var b = $("opt-" + (+e.key - 1)); if (b) b.click();
+  }
+  if (q.kind === "flash" && !Q.answered){
+    if (!Q.flipped && (e.key === " " || e.key === "Enter")){ e.preventDefault(); flip(); }
+    else if (Q.flipped && e.key === "1") $("knew").click();
+    else if (Q.flipped && e.key === "2") $("didnt").click();
+  }
+});
+var _render = renderQ; renderQ = function(){ Q.flipped = false; _render(); };
+
+// ---------- Clavier cyrillique ----------
+var ROWS = ["йцукенгшщзхъ", "фывапролджэё", "ячсмитьбю"];
+function buildKb(){
+  var kb = $("kb");
+  kb.innerHTML = ROWS.map(function(r){
+    return "<div class=\"r\">" + r.split("").map(function(ch){ return "<button type=\"button\" data-ch=\"" + ch + "\">" + ch + "</button>"; }).join("") + "</div>";
+  }).join("") + "<div class=\"r\"><button type=\"button\" class=\"w\" data-ch=\"-\">-</button><button type=\"button\" class=\"w\" data-ch=\" \">espace</button><button type=\"button\" class=\"w\" data-ch=\"BK\">⌫ effacer</button></div>";
+  kb.addEventListener("mousedown", function(e){ e.preventDefault(); });
+  kb.addEventListener("click", function(e){
+    var b = e.target.closest("[data-ch]"); if (!b) return;
+    var inp = $("ans"), ch = b.dataset.ch, s = inp.selectionStart == null ? inp.value.length : inp.selectionStart, en = inp.selectionEnd == null ? s : inp.selectionEnd;
+    if (ch === "BK"){ if (s === en && s > 0) s--; inp.value = inp.value.slice(0, s) + inp.value.slice(en); }
+    else { inp.value = inp.value.slice(0, s) + ch + inp.value.slice(en); s += 1; }
+    try { inp.setSelectionRange(s, s); } catch(_) {}
+  });
+}
+
+// ---------- Prononciation ----------
+function canSpeak(){ return "speechSynthesis" in window && typeof SpeechSynthesisUtterance === "function"; }
+$("say").onclick = function(){
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(LAST_SAY.replace(/\//g, ","));
+    u.lang = "ru-RU"; u.rate = .85;
+    var v = speechSynthesis.getVoices().filter(function(x){ return /^ru/i.test(x.lang); })[0]; if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch(e) {}
+};
+
+// ---------- Résultats ----------
+function results(){
+  var total = Q.good + Q.bad, pct = total ? Math.round(Q.good / total * 100) : 0;
+  $("rscore").textContent = Q.good + " / " + total;
+  $("rverdict").textContent = pct + " % — " + (pct >= 90 ? "Отлично ! Excellent." : pct >= 70 ? "Хорошо ! Bien joué." : pct >= 50 ? "Неплохо. Encore un effort." : "Повторим ! On révise.");
+  $("redo-err").hidden = !Q.errors.length;
+  $("rlist").innerHTML = Q.errors.length ? "<p class=\"label\" style=\"margin-top:22px\">À revoir (" + Q.errors.length + ")</p><ul class=\"err\">" +
+    Q.errors.map(function(e){
+      return "<li><span class=\"ru\">" + esc(e.it.ru) + (e.it.tr ? " <span class=\"frr\" style=\"font-weight:600\">[" + esc(e.it.tr) + "]</span>" : "") + "</span><span class=\"frr\">" + esc(e.it.fr) + "</span>" +
+        (e.given && e.given.trim() ? "<span class=\"you\">Ta réponse : " + esc(e.given.trim()) + "</span>" : "") + "</li>";
+    }).join("") + "</ul>" : "<p class=\"hint\" style=\"margin-top:18px\">Aucune erreur. Essaie un autre thème ou le mode « Écrire en russe ».</p>";
+  show("res");
+}
+$("redo-err").onclick = function(){
+  var items = Q.errors.map(function(e){ return e.it; });
+  items.isRetry = true; startQuiz(items);
+};
+$("again").onclick = function(){ show("setup"); renderSetup(); };
+$("start").onclick = function(){ startQuiz(buildPool()); };
+
+renderSetup();
+</script>
+
+</body></html>
